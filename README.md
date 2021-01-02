@@ -242,7 +242,7 @@ Create microservices that responsible to handle CRUD operation of user detail. C
 Go to the main Spring Boot application class and add below annotations;
 ```
 @EnableEurekaClient
-@EnableDiscoveryClient\
+@EnableDiscoveryClient
 @EnableFeignClients
 @SpringBootApplication
 public class MsMySqlMstUserDetailApplication {
@@ -252,6 +252,19 @@ public class MsMySqlMstUserDetailApplication {
 	}
 
 }
+```
+
+Create service to consume family member service, and add two annotations @FeignClient and @RibbonClient to enable ribbon and feign client.
+```
+@FeignClient(name="family-member-service")
+@RibbonClient(name="family-member-service")
+public interface FamilyMemberConsumer {
+	
+	@GetMapping("api/family-member/userId/{id}")
+	public FamilyMemberDTO findByUserId(@PathVariable Long id);
+
+}
+
 ```
 
 In the application.properties, add configuration is given below
@@ -327,19 +340,6 @@ public class MsMongoDbFamilyMemberApplication {
 	}
 
 }
-```
-
-Create service to consume user detail, and add two annotations @FeignClient and @RibbonClient to enable ribbon and feign client.
-```
-@FeignClient(name="family-member-service")
-@RibbonClient(name="family-member-service")
-public interface FamilyMemberConsumer {
-	
-	@GetMapping("api/family-member/userId/{id}")
-	public FamilyMemberDTO findByUserId(@PathVariable Long id);
-
-}
-
 ```
 
 In the application.properties, add configuration is given below
