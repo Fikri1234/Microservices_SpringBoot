@@ -254,7 +254,7 @@ public class MsMySqlMstUserDetailApplication {
 }
 ```
 
-Create service to consume family member service, and add two annotations @FeignClient and @RibbonClient to enable ribbon and feign client.
+Create service to consume family member, and add two annotations @FeignClient and @RibbonClient to enable ribbon and feign client.
 ```
 @FeignClient(name="family-member-service")
 @RibbonClient(name="family-member-service")
