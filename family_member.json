@@ -1,0 +1,95 @@
+[{
+  "_id": {
+    "$oid": "5feffa6d56e31e25b45eabc4"
+  },
+  "userId": 1,
+  "wife": {
+    "firstName": "rofiah",
+    "lastName": "giyem",
+    "dateOfBirth": "1979-10-09 19:07",
+    "placeOfBirth": "bandung"
+  },
+  "childs": [
+    {
+      "firstName": "budi",
+      "lastName": "doremi",
+      "gender": "men",
+      "dateOfBirth": "1999-12-09 09:57",
+      "placeOfBirth": "bandung"
+    },
+    {
+      "firstName": "mat",
+      "lastName": "ucay",
+      "gender": "men",
+      "dateOfBirth": "1989-10-19 19:57",
+      "placeOfBirth": "jakarta"
+    },
+    {
+      "firstName": "siti",
+      "lastName": "jaenab",
+      "gender": "women",
+      "dateOfBirth": "2001-06-19 23:57",
+      "placeOfBirth": "tasikmalaya"
+    }
+  ],
+  "createdBy": "admin",
+  "createdDate": "2021-01-01 19:01",
+  "modifiedBy": "admin",
+  "modifiedDate": "2021-01-01 19:01"
+},{
+  "_id": {
+    "$oid": "5feffb0356e31e25b45eabc5"
+  },
+  "wife": {
+    "firstName": "maemunah",
+    "lastName": "nyun",
+    "dateOfBirth": "1983-08-19 10:27",
+    "placeOfBirth": "bandung"
+  },
+  "childs": [
+    {
+      "firstName": "iyuy",
+      "lastName": "juned",
+      "gender": "men",
+      "dateOfBirth": "1999-11-09 08:27",
+      "placeOfBirth": "bandung"
+    }
+  ],
+  "createdBy": "anduk",
+  "createdDate": "2021-01-01 04:21",
+  "modifiedBy": "anduk",
+  "modifiedDate": "2021-01-01 04:21",
+  "userId": 3
+},{
+  "_id": {
+    "$oid": "5ff00be4272eaa0e8ac52aec"
+  },
+  "userId": 2,
+  "wife": {
+    "firstName": "rofiah",
+    "lastName": "giyem",
+    "dateOfBirth": "1979-10-09 19:07",
+    "placeOfBirth": "bandung"
+  },
+  "childs": [
+    {
+      "firstName": "budi",
+      "lastName": "doremi",
+      "gender": "men",
+      "dateOfBirth": "1999-12-09 09:57",
+      "placeOfBirth": "bandung"
+    },
+    {
+      "firstName": "mat",
+      "lastName": "ucay",
+      "gender": "men",
+      "dateOfBirth": "1989-10-19 19:57",
+      "placeOfBirth": "jakarta"
+    }
+  ],
+  "createdBy": "admin",
+  "createdDate": "2021-01-01 19:01",
+  "modifiedBy": "admin",
+  "modifiedDate": "2021-01-01 19:01",
+  "_class": "com.project.family.Entity.FamilyMemberEntity"
+}]

@@ -20,6 +20,8 @@ public class MUserDetailDTO {
 	private Long userId;
 	private String port;
 	
+	private FamilyMemberDTO familyMemberDTO;
+	
 	private long totalElements;
 	private int totalPages;
 	

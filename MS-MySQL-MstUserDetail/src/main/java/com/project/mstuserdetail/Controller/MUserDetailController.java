@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
+import com.project.mstuserdetail.Consumer.FamilyMemberConsumer;
+import com.project.mstuserdetail.DTO.FamilyMemberDTO;
 import com.project.mstuserdetail.DTO.MUserDetailDTO;
 import com.project.mstuserdetail.Entity.MUserDetailEntity;
 import com.project.mstuserdetail.Service.MUserDetailService;
@@ -40,6 +42,9 @@ public class MUserDetailController {
 	
 	@Autowired
 	private MUserDetailService mUserDetailService;
+	
+	@Autowired
+	private FamilyMemberConsumer familyMemberConsumer;
 	
 	@GetMapping("/{id}")
     @Timed
@@ -63,9 +68,12 @@ public class MUserDetailController {
         
         Optional<MUserDetailEntity> opt = mUserDetailService.findByUserIdData(userId);
         MUserDetailDTO dto = new MUserDetailDTO();
+        FamilyMemberDTO familyMemberDTO = new FamilyMemberDTO();
         
         if (opt.isPresent()) {
         	dto = new MUserDetailDTO(opt.get());
+        	familyMemberDTO = familyMemberConsumer.findByUserId(userId);
+        	dto.setFamilyMemberDTO(familyMemberDTO);
         	dto.setPort(environment.getProperty("server.port"));
         }
         return ResponseEntity.status(HttpStatus.OK).body(dto);

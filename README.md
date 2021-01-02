@@ -1,23 +1,24 @@
 # Microservices_SpringBoot
-Spring boot microservices with Java 8, MySQL, eureka, zuul, feign, ribbon, zipkin, sleuth
+Spring boot microservices with Java 8, MySQL, MongoDB, eureka, zuul, feign, ribbon, zipkin, sleuth
 
 
-**Prerequisites**
+## Prerequisites
 
 1. Java 8
 2. JPA Mysql
-3. Spring Boot Actuator (Optional)
-4. Dev Tools (Optional)
-5. Lombok (Optional)
-6. Eureka
-7. Zuul
-8. Feign
-9. Ribbon
-10. Zipkin
-11. Sleuth
+3. Mongo DB
+4. Spring Boot Actuator (Optional)
+5. Dev Tools (Optional)
+6. Lombok (Optional)
+7. Eureka
+8. Zuul
+9. Feign
+10. Ribbon
+11. Zipkin
+12. Sleuth
 
 
-**Eureka Server**
+## Eureka Server
 
 Create Project for Eureka Server and make sure to include these dependencies: Web, Eureka Server.
 ```
@@ -55,7 +56,7 @@ eureka.client.fetch-registry=false
 
 hit the URL http://localhost:8761/ in your web browser and you can find the Eureka Server running on the port 8761 as shown below
 
-**User Service**
+## User Service
 
 Create microservices that responsible to handle CRUD operation of user. Choose following dependencies; Actuator (Optional), Dev Tools(Optional), Lombok(Optional), JPA MySQL, Web, Eureka Client, Feign, Ribbon, Zipkin, Sleuth.
 ```
@@ -160,7 +161,88 @@ master-user-detail-service.ribbon.listOfServers=localhost:8200,localhost:8201
 master-user-detail-service.ribbon.ServerListRefreshInterval=15000 
 ```
 
-**User Detail Service**
+## Family Member Service
+
+Create microservices that responsible to handle CRUD operation of family member. Choose following dependencies; Actuator (Optional), Dev Tools(Optional), Lombok(Optional), Mongo DB, Web, Eureka Client, Zipkin, Sleuth.
+```
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-actuator</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-mongodb</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-sleuth-zipkin</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-sleuth</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-devtools</artifactId>
+    <scope>runtime</scope>
+    <optional>true</optional>
+</dependency>
+<dependency>
+    <groupId>org.projectlombok</groupId>
+    <artifactId>lombok</artifactId>
+    <optional>true</optional>
+</dependency>
+```
+
+Go to the main Spring Boot application class and add below annotations;
+```
+@EnableEurekaClient
+@EnableDiscoveryClient
+@SpringBootApplication
+public class MsMongoDbFamilyMemberApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(MsMongoDbFamilyMemberApplication.class, args);
+	}
+
+}
+```
+
+Create service to consume user detail, and add two annotations @FeignClient and @RibbonClient to enable ribbon and feign client.
+```
+@FeignClient(name="family-member-service")
+@RibbonClient(name="family-member-service")
+public interface FamilyMemberConsumer {
+	
+	@GetMapping("api/family-member/userId/{id}")
+	public FamilyMemberDTO findByUserId(@PathVariable Long id);
+
+}
+
+```
+
+In the application.properties, add configuration is given below
+```
+spring.application.name=family-member-service
+server.port=8300
+server.servlet.context-path=/api
+
+spring.data.mongodb.host=localhost
+spring.data.mongodb.port=27017
+spring.data.mongodb.database=cobates
+
+eureka.client.service-url.defaultZone=http://localhost:8761/eureka/
+```
+
+## User Detail Service
 
 Create microservices that responsible to handle CRUD operation of user detail. Choose following dependencies; Actuator (Optional), Dev Tools(Optional), Lombok(Optional), JPA MySQL, Web, Eureka Client, Zipkin, Sleuth.
 ```
@@ -179,6 +261,16 @@ Create microservices that responsible to handle CRUD operation of user detail. C
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-feign</artifactId>
+    <version>1.4.7.RELEASE</version>
+</dependency>
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-netflix-ribbon</artifactId>
+    <version>2.2.6.RELEASE</version>
 </dependency>
 <dependency>
     <groupId>org.springframework.cloud</groupId>
@@ -209,7 +301,8 @@ Create microservices that responsible to handle CRUD operation of user detail. C
 Go to the main Spring Boot application class and add below annotations;
 ```
 @EnableEurekaClient
-@EnableDiscoveryClient
+@EnableDiscoveryClient\
+@EnableFeignClients
 @SpringBootApplication
 public class MsMySqlMstUserDetailApplication {
 
@@ -235,10 +328,13 @@ spring.datasource.driver-class-name=com.mysql.jdbc.Driver
 spring.jpa.database-platform= org.hibernate.dialect.MySQL5Dialect
 
 eureka.client.service-url.defaultZone=http://localhost:8761/eureka/
+
+family-member-service.ribbon.listOfServers=localhost:8300,localhost:8301
+family-member-service.ribbon.ServerListRefreshInterval=15000 
 ```
 
 
-**Gateway Service**
+## Gateway Service
 
 Create Gateway-Service (Zuul proxy) Application and register it in Eureka server.
 
@@ -285,6 +381,9 @@ zuul.routes.master-user-detail-service.strip-prefix=true
 
 Now hit http://localhost:8761/ in browser and check that eureka server is running well with all microservices are registed.
 ![Alt text](asset/eureka_server.PNG?raw=true "Eureka Server")
+
+Start Zipkin UI via Docker by type following code to run image directly `docker run -d -p 9411:9411 openzipkin/zipkin`.
+Open your browser and hit http://localhost:9411/zipkin/ to measure where service has spent more time.
 
 
 **Sample Payload**
